@@ -1,7 +1,7 @@
 body {
-  background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+  background-color: #000000;
   font-family: 'Arial Black', Arial, sans-serif;
-  color: #eee;
+  color: #FF0000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,33 +12,28 @@ body {
 .container {
   text-align: center;
   width: 360px;
+  border: 3px solid #FF0000;
+  padding: 30px 25px;
+  border-radius: 12px;
+  background-color: #1a1a1a;
+  box-shadow: 0 0 15px #FF0000;
 }
 
 .logo {
   font-size: 48px;
   margin-bottom: 20px;
-  color: #39ff14;
+  font-weight: bold;
+  letter-spacing: 4px;
   text-shadow:
-    0 0 5px #39ff14,
-    0 0 10px #39ff14,
-    0 0 20px #39ff14,
-    0 0 40px #39ff14;
-}
-
-.signup-box {
-  background-color: rgba(0, 0, 0, 0.75);
-  padding: 30px 25px;
-  border-radius: 10px;
-  box-shadow:
-    0 0 10px #39ff14,
-    0 0 40px #39ff14 inset;
+    0 0 5px #FF0000,
+    0 0 10px #FF0000,
+    0 0 20px #FF0000;
 }
 
 .signup-box h2 {
   margin-bottom: 25px;
   font-weight: normal;
-  letter-spacing: 1.5px;
-  color: #39ff14;
+  color: #FF4444;
 }
 
 .signup-box input {
@@ -49,13 +44,15 @@ body {
   border-radius: 6px;
   font-size: 16px;
   outline: none;
+  background-color: #330000;
+  color: #FF6666;
   box-sizing: border-box;
 }
 
 .signup-box button {
   width: 100%;
   padding: 12px;
-  background-color: #39ff14;
+  background-color: #FF0000;
   border: none;
   border-radius: 6px;
   font-size: 18px;
@@ -66,17 +63,17 @@ body {
 }
 
 .signup-box button:hover {
-  background-color: #2cc50d;
+  background-color: #cc0000;
 }
 
 .signup-box p {
   margin-top: 15px;
   font-size: 14px;
-  color: #aaa;
+  color: #FF6666;
 }
 
 .signup-box a {
-  color: #39ff14;
+  color: #FF0000;
   text-decoration: none;
   font-weight: bold;
 }
