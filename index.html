@@ -1,57 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>TurtleQue Sign In - Y2K Style</title>
-<link rel="stylesheet" href="styles.css" />
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8" />
+  <title>TurtleQue Desktop</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1 class="logo">TurtleQue</h1>
-    <div class="signin-box">
-      <h2>Welcome Back</h2>
-      <form id="signin-form">
-        <input type="email" id="email" placeholder="Enter your email" required />
-        <input type="password" id="password" placeholder="Enter your password" required />
-        <button type="submit">SIGN IN</button>
-      </form>
-      <p>Don't have an account? <a href="signup.html">Sign up here!</a></p>
-      <p id="error-msg" style="color:#ff5555; font-size:12px;"></p>
+  <div class="desktop">
+    <div class="icon blog-icon" title="Blogs">
+      <img src="icon-blogs.png" alt="Blog Icon" />
     </div>
   </div>
-
-  <script>
-    // Your Firebase config here (replace with your config)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDbPW4QJXwz4zirD1eNni05Jv9jjvznBoc",
-      authDomain: "turtleque-d4096.firebaseapp.com",
-      projectId: "turtleque-d4096",
-      storageBucket: "turtleque-d4096.firebasestorage.app",
-      messagingSenderId: "1063279534551",
-      appId: "1:1063279534551:web:12ca5515dae9e447c02b92"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    document.getElementById('signin-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const errorMsg = document.getElementById('error-msg');
-      errorMsg.textContent = '';
-
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        // Redirect to home page on successful login
-        window.location.href = 'home.html'; 
-      } catch (error) {
-        errorMsg.textContent = error.message;
-      }
-    });
-  </script>
 </body>
 </html>
