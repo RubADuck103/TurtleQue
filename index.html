@@ -10,11 +10,15 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
+  <!-- 🔊 Startup Sound -->
+  <audio id="startupSound" autoplay>
+    <source src="startup.mp3" type="audio/mpeg" />
+  </audio>
+
   <div class="desktop">
     <div class="icon blog-icon">
       <a href="#" id="openBlogWindow">
         <img src="icon-blogs.png" alt="Blog Icon" />
-        <!-- no label text as per style.css -->
       </a>
     </div>
 
@@ -48,7 +52,22 @@
   </div>
 
   <script>
-    // Your Firebase config
+    // Try to play startup sound on load or user interaction
+    window.addEventListener('DOMContentLoaded', () => {
+      const audio = document.getElementById('startupSound');
+      setTimeout(() => {
+        const tryPlay = audio.play();
+        if (tryPlay !== undefined) {
+          tryPlay.catch(() => {
+            document.body.addEventListener('click', () => {
+              audio.play();
+            }, { once: true });
+          });
+        }
+      }, 300);
+    });
+
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDbPW4QJXwz4zirD1eNni05Jv9jjvznBoc",
       authDomain: "turtleque-d4096.firebaseapp.com",
@@ -58,7 +77,6 @@
       appId: "1:1063279534551:web:12ca5515dae9e447c02b92"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
@@ -72,34 +90,29 @@
     const blogTitleInput = document.getElementById('blogTitle');
     const blogContentInput = document.getElementById('blogContentInput');
 
-    // Open blog window
     openBtn.addEventListener('click', e => {
       e.preventDefault();
       blogWindow.style.display = 'flex';
       loadPosts();
     });
 
-    // Close blog window
     closeBtn.addEventListener('click', () => {
       blogWindow.style.display = 'none';
     });
 
-    // Dragging the window
+    // Draggable window
     let isDragging = false;
     let offsetX, offsetY;
-
     header.addEventListener('mousedown', (e) => {
       isDragging = true;
       offsetX = e.clientX - blogWindow.offsetLeft;
       offsetY = e.clientY - blogWindow.offsetTop;
       document.body.style.userSelect = 'none';
     });
-
     window.addEventListener('mouseup', () => {
       isDragging = false;
       document.body.style.userSelect = 'auto';
     });
-
     window.addEventListener('mousemove', (e) => {
       if (isDragging) {
         blogWindow.style.left = (e.clientX - offsetX) + 'px';
@@ -107,7 +120,6 @@
       }
     });
 
-    // Load blog posts from Firestore
     function loadPosts() {
       blogPostsDiv.innerHTML = '<p>Loading blog posts...</p>';
       db.collection('posts')
@@ -136,7 +148,6 @@
         });
     }
 
-    // Submit new blog post
     blogForm.addEventListener('submit', e => {
       e.preventDefault();
       const title = blogTitleInput.value.trim();
