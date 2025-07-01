@@ -2,36 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>TurtleQue Login</title>
+  <title>TurtleQue Desktop</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <!-- 🔊 Startup Sound -->
-  <audio id="startupSound">
+  <audio id="startupSound" autoplay>
     <source src="startup.mp3" type="audio/mpeg" />
   </audio>
 
-  <!-- 💻 LOGIN SCREEN -->
-  <div id="loginScreen" class="login-screen">
-    <h2>Welcome to TurtleQue</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button id="loginBtn">Login</button>
-    <button id="signupBtn">Sign Up</button>
-    <p id="authMessage" style="color: red;"></p>
-  </div>
-
-  <!-- 🖥️ DESKTOP (HIDDEN UNTIL LOGGED IN) -->
-  <div class="desktop" id="desktopUI" style="display: none;">
+  <div class="desktop">
     <div class="icon blog-icon">
       <a href="#" id="openBlogWindow">
         <img src="icon-blogs.png" alt="Blog Icon" />
+        <span>Blog</span>
       </a>
     </div>
 
+    <!-- Blog Window -->
     <div id="blogWindow" class="window" style="display:none;">
       <div class="window-header">
         <span>Blog</span>
@@ -39,9 +31,21 @@
       </div>
       <div class="window-content" id="blogContent">
         <div id="blogPosts"></div>
+
         <form id="blogForm">
-          <input type="text" id="blogTitle" placeholder="Title" required />
-          <textarea id="blogContentInput" placeholder="Write your post here..." required></textarea>
+          <input
+            type="text"
+            id="blogTitle"
+            placeholder="Title"
+            required
+            style="width: 100%; margin-bottom: 5px;"
+          />
+          <textarea
+            id="blogContentInput"
+            placeholder="Write your post here..."
+            required
+            style="width: 100%; height: 80px;"
+          ></textarea>
           <button type="submit">Post Blog</button>
         </form>
       </div>
@@ -49,6 +53,22 @@
   </div>
 
   <script>
+    // Try to play startup sound on load or user interaction
+    window.addEventListener('DOMContentLoaded', () => {
+      const audio = document.getElementById('startupSound');
+      setTimeout(() => {
+        const tryPlay = audio.play();
+        if (tryPlay !== undefined) {
+          tryPlay.catch(() => {
+            document.body.addEventListener('click', () => {
+              audio.play();
+            }, { once: true });
+          });
+        }
+      }, 300);
+    });
+
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDbPW4QJXwz4zirD1eNni05Jv9jjvznBoc",
       authDomain: "turtleque-d4096.firebaseapp.com",
@@ -59,45 +79,96 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const loginScreen = document.getElementById("loginScreen");
-    const desktopUI = document.getElementById("desktopUI");
-    const startupSound = document.getElementById("startupSound");
-    const loginBtn = document.getElementById("loginBtn");
-    const signupBtn = document.getElementById("signupBtn");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const authMessage = document.getElementById("authMessage");
+    const blogWindow = document.getElementById('blogWindow');
+    const openBtn = document.getElementById('openBlogWindow');
+    const closeBtn = document.getElementById('closeBlogWindow');
+    const header = blogWindow.querySelector('.window-header');
 
-    loginBtn.onclick = () => {
-      const email = emailInput.value;
-      const password = passwordInput.value;
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => showDesktop())
-        .catch(err => authMessage.textContent = err.message);
-    };
+    const blogPostsDiv = document.getElementById('blogPosts');
+    const blogForm = document.getElementById('blogForm');
+    const blogTitleInput = document.getElementById('blogTitle');
+    const blogContentInput = document.getElementById('blogContentInput');
 
-    signupBtn.onclick = () => {
-      const email = emailInput.value;
-      const password = passwordInput.value;
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(() => showDesktop())
-        .catch(err => authMessage.textContent = err.message);
-    };
+    openBtn.addEventListener('click', e => {
+      e.preventDefault();
+      blogWindow.style.display = 'flex';
+      loadPosts();
+    });
 
-    function showDesktop() {
-      loginScreen.style.display = "none";
-      desktopUI.style.display = "block";
-      startupSound.play().catch(() => {
-        document.body.addEventListener("click", () => startupSound.play(), { once: true });
-      });
+    closeBtn.addEventListener('click', () => {
+      blogWindow.style.display = 'none';
+    });
+
+    // Draggable window
+    let isDragging = false;
+    let offsetX, offsetY;
+    header.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - blogWindow.offsetLeft;
+      offsetY = e.clientY - blogWindow.offsetTop;
+      document.body.style.userSelect = 'none';
+    });
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      document.body.style.userSelect = 'auto';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        blogWindow.style.left = (e.clientX - offsetX) + 'px';
+        blogWindow.style.top = (e.clientY - offsetY) + 'px';
+      }
+    });
+
+    function loadPosts() {
+      blogPostsDiv.innerHTML = '<p>Loading blog posts...</p>';
+      db.collection('posts')
+        .orderBy('createdAt', 'desc')
+        .get()
+        .then(snapshot => {
+          blogPostsDiv.innerHTML = '';
+          snapshot.forEach(doc => {
+            const post = doc.data();
+            const postElem = document.createElement('div');
+            postElem.style.borderBottom = '1px solid #ccc';
+            postElem.style.marginBottom = '10px';
+            postElem.innerHTML = `
+              <h3>${post.title}</h3>
+              <p>${post.content}</p>
+              <small>${post.createdAt ? new Date(post.createdAt.toDate()).toLocaleString() : 'Just now'}</small>
+            `;
+            blogPostsDiv.appendChild(postElem);
+          });
+          if (blogPostsDiv.innerHTML === '') {
+            blogPostsDiv.innerHTML = '<p>No posts yet.</p>';
+          }
+        })
+        .catch(error => {
+          blogPostsDiv.innerHTML = `<p>Error loading posts: ${error.message}</p>`;
+        });
     }
 
-    // Auto-login if user is already logged in
-    auth.onAuthStateChanged(user => {
-      if (user) showDesktop();
+    blogForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const title = blogTitleInput.value.trim();
+      const content = blogContentInput.value.trim();
+      if (!title || !content) return;
+
+      db.collection('posts')
+        .add({
+          title,
+          content,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          blogTitleInput.value = '';
+          blogContentInput.value = '';
+          loadPosts();
+        })
+        .catch(err => {
+          alert('Error adding post: ' + err.message);
+        });
     });
   </script>
 </body>
