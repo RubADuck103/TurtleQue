@@ -3,45 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home - TurtleQue</title>
+  <title>TurtleQue Home - Y2K Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Welcome to TurtleQue!</h1>
-  <p id="user-email"></p>
-  <button id="logout-btn">Log Out</button>
+  <div class="page">
+    <header>
+      <h1>TurtleQue</h1>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">Friends</a>
+        <a href="#">Messages</a>
+        <a href="#">Profile</a>
+      </nav>
+    </header>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    <div class="content">
+      <aside class="sidebar">
+        <img src="avatar.png" alt="Your Avatar" class="avatar" />
+        <h2>Username</h2>
+        <p>Status: Online</p>
+        <h3>Friends</h3>
+        <ul class="friend-list">
+          <li><img src="friend1.png" alt="Friend 1" /> Friend1</li>
+          <li><img src="friend2.png" alt="Friend 2" /> Friend2</li>
+          <!-- Add more friends -->
+        </ul>
+      </aside>
 
-    const firebaseConfig = {
-  apiKey: "AIzaSyDbPW4QJXwz4zirD1eNni05Jv9jjvznBoc",
-  authDomain: "turtleque-d4096.firebaseapp.com",
-  projectId: "turtleque-d4096",
-  storageBucket: "turtleque-d4096.firebasestorage.app",
-  messagingSenderId: "1063279534551",
-  appId: "1:1063279534551:web:12ca5515dae9e447c02b92"
-};
+      <main class="feed">
+        <section class="new-post">
+          <textarea placeholder="What's on your mind?"></textarea>
+          <button id="post-btn">Post</button>
+        </section>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+        <section class="posts">
+          <!-- Posts will appear here -->
+        </section>
+      </main>
+    </div>
+  </div>
 
-    const userEmailEl = document.getElementById("user-email");
-    const logoutBtn = document.getElementById("logout-btn");
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userEmailEl.textContent = "Logged in as: " + user.email;
-      } else {
-        window.location.href = "login.html";
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.href = "login.html";
-    });
-  </script>
+  <script src="scripts.js"></script>
 </body>
 </html>
