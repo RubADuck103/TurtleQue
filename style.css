@@ -1,76 +1,86 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+  font-family: 'Arial Black', Arial, sans-serif;
+  color: #eee;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 40px 20px;
+  height: 100vh;
   margin: 0;
 }
 
-h1 {
-  color: #333;
+.container {
+  text-align: center;
+  width: 360px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  gap: 12px;
-  margin-top: 20px;
+.logo {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #39ff14;
+  text-shadow:
+    0 0 5px #39ff14,
+    0 0 10px #39ff14,
+    0 0 20px #39ff14,
+    0 0 40px #39ff14;
 }
 
-input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+.signup-box {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 30px 25px;
+  border-radius: 10px;
+  box-shadow:
+    0 0 10px #39ff14,
+    0 0 40px #39ff14 inset;
 }
 
-button {
-  padding: 10px;
-  border-radius: 8px;
+.signup-box h2 {
+  margin-bottom: 25px;
+  font-weight: normal;
+  letter-spacing: 1.5px;
+  color: #39ff14;
+}
+
+.signup-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
   border: none;
-  background-color: #4caf50;
-  color: white;
+  border-radius: 6px;
   font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.signup-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #39ff14;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #45a049;
+.signup-box button:hover {
+  background-color: #2cc50d;
 }
 
-p {
+.signup-box p {
   margin-top: 15px;
-  color: #555;
+  font-size: 14px;
+  color: #aaa;
 }
 
-a {
-  color: #4caf50;
+.signup-box a {
+  color: #39ff14;
   text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-#user-email {
-  margin: 20px 0;
   font-weight: bold;
 }
 
-#logout-btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  background-color: #f44336;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-#logout-btn:hover {
-  background-color: #da190b;
+.signup-box a:hover {
+  text-decoration: underline;
 }
