@@ -1,52 +1,53 @@
-/* 🔐 Login Screen Overlay */
-.login-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* Global reset & XP background */
+body, html {
+  margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
-  background: #008080 url('xp-backround.jpg') center/cover no-repeat;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.desktop {
+  width: 100%;
+  height: 100vh;
+  background-image: url('xp-backround.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-family: Tahoma, sans-serif;
-  z-index: 9999;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 40px;
+  box-sizing: border-box;
+  position: relative;
 }
 
-.login-screen h2 {
-  color: white;
-  margin-bottom: 20px;
-  font-size: 28px;
-  text-shadow: 1px 1px 2px #000;
-}
-
-.login-screen input,
-.login-screen button {
-  margin: 6px;
-  padding: 10px 12px;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
-}
-
-.login-screen input {
-  width: 240px;
-}
-
-.login-screen button {
-  background-color: #0047ab;
-  color: white;
-  font-weight: bold;
+/* Desktop icon */
+.icon {
+  display: inline-block;
+  width: 90px;
+  text-align: center;
+  margin: 20px;
   cursor: pointer;
 }
 
-.login-screen button:hover {
-  background-color: #005fff;
+.icon img {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
 }
 
-#authMessage {
-  margin-top: 10px;
-  color: #ff8080;
-  font-weight: bold;
+.icon span {
+  color: white;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Blog icon */
+.blog-icon img {
+  width: 64px;
+  height: 64px;
 }
