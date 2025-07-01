@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TurtleQue Desktop</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <div class="desktop">
+    <div class="icon blog-icon">
+      <a href="#" id="openBlogWindow" title="Blogs">
+        <img src="icon-blogs.png" alt="Blog Icon" />
+      </a>
+    </div>
+
+    <!-- Blog Window -->
+    <div id="blogWindow" class="window" style="display:none;">
+      <div class="window-header">
+        <span>Blog</span>
+        <button id="closeBlogWindow">X</button>
+      </div>
+      <div class="window-content">
+        <div id="blogPosts"></div>
+
+        <form id="blogForm">
+          <input type="text" id="blogTitle" placeholder="Title" required />
+          <textarea id="blogContentInput" placeholder="Write your post here..." required></textarea>
+          <button type="submit">Post Blog</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createClient } = supabase;
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+    const blogWindow = document.getElementById('blogWindow');
+    const openBtn = document.getElementById('openBlogWindow');
+    const closeBtn = document.getElementById('closeBlogWindow');
+    const blogPostsDiv = document.getElementById('blogPosts');
+    const blogForm = document.getElementById('blogForm');
+    const blogTitleInput = document.getElementById('blogTitle');
+    const blogContentInput = document.getElementById('blogContentInput');
+
+    openBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      blogWindow.style.display = 'flex';
+      loadPosts();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      blogWindow.style.display = 'none';
+    });
+
+    blogForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = blogTitleInput.value.trim();
+      const content = blogContentInput.value.trim();
+      if (!title || !content) return;
+
+      const { error } = await supabaseClient.from('blogs').insert([{ title, content }]);
+      if (error) {
+        alert('Error posting blog: ' + error.message);
+      } else {
+        blogTitleInput.value = '';
+        blogContentInput.value = '';
+        loadPosts();
+      }
+    });
+
+    async function loadPosts() {
+      blogPostsDiv.innerHTML = '<p>Loading blog posts...</p>';
+      const { data, error } = await supabaseClient
+        .from('blogs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        blogPostsDiv.innerHTML = `<p>Error loading posts: ${error.message}</p>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        blogPostsDiv.innerHTML = '<p>No posts yet.</p>';
+        return;
+      }
+
+      blogPostsDiv.innerHTML = '';
+      data.forEach((post) => {
+        const postElem = document.createElement('div');
+        postElem.innerHTML = `
+          <h3>${post.title}</h3>
+          <p>${post.content}</p>
+          <small>${new Date(post.created_at).toLocaleString()}</small>
+        `;
+        postElem.style.borderBottom = '1px solid #ccc';
+        postElem.style.marginBottom = '10px';
+        blogPostsDiv.appendChild(postElem);
+      });
+    }
+  </script>
+</body>
+</html>
